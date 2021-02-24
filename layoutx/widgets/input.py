@@ -37,7 +37,8 @@ class FileInput(BaseInput):
     self._rootdir = None
     self._excludefiles = []
     self._suggestions = []
-    
+    self._file_suggestions = None
+
     self._textv = StringVar()
     self._box = ttk.Frame(master=master)
     self._box.grid_columnconfigure(0, weight=1)
@@ -45,9 +46,9 @@ class FileInput(BaseInput):
     self._box.grid_rowconfigure(0, weight=1)
     
     self._input = AutocompleteCombobox(
-        master=self._box,
-        completevalues=[],
-        textvariable=self._textv
+      master=self._box,
+      completevalues=[],
+      textvariable=self._textv
     )
 
     # Redirect configure to input
@@ -64,6 +65,7 @@ class FileInput(BaseInput):
     self.connect_to_prop("ext", self._on_ext_changed)
     self.connect_to_prop("rootdir", self._on_rootdir_changed)
     self.connect_to_prop("excludefiles", self._on_excludefiles_changed)
+    #self.connect_to_prop("suggestion", self.on_changed_suggestion)
     
     self._input.drop_target_register(DND_FILES)
     self._input.dnd_bind('<<Drop>>', self._drop)
@@ -80,19 +82,23 @@ class FileInput(BaseInput):
     self._onlydir = value
   
   def on_changed_suggestion(self, value):
-    self._suggestions = value if value else []
-    super().on_changed_suggestion(value)
+    if value:
+      self._suggestions = value
+      self._set_suggestions()
 
   def _set_suggestions(self):
-    if self._rootdir and Path(self._rootdir).exists():
+    if self._rootdir and Path(self._rootdir).exists() and self._file_suggestions == None:
       get_suggestion_from_ext = lambda ext: list(filter(lambda fn: Path(fn).stem not in self._excludefiles, [str(fn) for fn in Path(self._rootdir).rglob(f"*{ext[1]}")]))
       
       if isinstance(self._ext, list):
         from functools import reduce
-        suggestions = reduce(lambda a, curr: a + get_suggestion_from_ext(self._ext), [])
+        self._file_suggestions = reduce(lambda a, curr: a + get_suggestion_from_ext(curr), [])
       else:
-        suggestions = get_suggestion_from_ext(self._ext)
-      self._input.set_completion_list(self._suggestions + suggestions)
+        self._file_suggestions = get_suggestion_from_ext(self._ext)
+    if isinstance(self._file_suggestions, list):
+      self._input.set_completion_list(self._suggestions + self._file_suggestions)
+    else:
+      self._input.set_completion_list(self._suggestions)
 
   def _on_ext_changed(self, value):
     self._ext = value if value else ('Any File', '.*')

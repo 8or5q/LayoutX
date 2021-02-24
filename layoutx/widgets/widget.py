@@ -144,7 +144,6 @@ class Widget:
     else:
       return self._node.get_attr(key, default)
 
-    return default
   def set_attr(self, key, value):
     if key in self._node.prop_mapping:
       self._node.prop_mapping[key]["value"] = value

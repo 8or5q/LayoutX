@@ -123,7 +123,10 @@ def compile_ast(tree: ast.AST, path_mapping={}, allowed_names=[], attr2sub=False
   return compile(expr, filename="<ast>", mode=mode)
 
 def eval_compiled(comp, variables={}):
-  return eval(comp, {"__builtins__":None}, dict(copy(safe_dict), **variables))
+  try:
+    return eval(comp, {"__builtins__":None}, dict(copy(safe_dict), **variables))
+  except:
+    return None
 
 def set_state(comp, variables, value):
   exec(comp, {"__builtins__":None, "_value": value}, variables)

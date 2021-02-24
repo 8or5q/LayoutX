@@ -32,7 +32,8 @@ class Sheet(Widget):
       "paste",
       "delete",
       "undo",
-      "edit_cell"
+      "edit_cell",
+      "column_width_resize"
     ))
 
   def _on_data_edited(self, *_):
@@ -58,13 +59,13 @@ class Sheet(Widget):
     self._tksheet.disable_bindings()
     if (self._editable):
       self._tksheet.enable_bindings(
-        "single_select",
+        ["single_select",
         "copy",
         "cut",
         "paste",
         "delete",
         "undo",
-        "edit_cell"
+        "edit_cell"]
       )
     else:
       self._tksheet.enable_bindings(
