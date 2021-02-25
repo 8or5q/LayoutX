@@ -90,8 +90,8 @@ def security_check_ast(tree: ast.AST, allowed_internal_names = []):
       if node.func.id.startswith("_"):
         raise ValueError(f"Function { node.func.id } cannot be used!")
     
-    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-      raise ValueError(f"Cannot use object methods")
+    #if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+    #  raise ValueError(f"Cannot use object methods")
 
 
 def compile_exp(exp: str, path_mapping={}, allowed_names=[], attr2sub=False, mode="eval"):
