@@ -24,22 +24,27 @@ def dnd_installed():
 
 def dnd_install():
   urls = {
-    "Windows" : "https://github.com/petasis/tkdnd/releases/download/tkdnd-release-test-v2.9.2/tkdnd-2.9.2-windows-x64.zip",
-    "Linux"   : "https://github.com/petasis/tkdnd/releases/download/tkdnd-release-test-v2.9.2/tkdnd-2.9.2-linux-x64.tgz",
-    "Darwin"  : "https://github.com/petasis/tkdnd/releases/download/tkdnd-release-test-v2.9.2/tkdnd-2.9.2-osx-x64.tgz"
+    "Windows"       : "https://github.com/petasis/tkdnd/releases/download/tkdnd-release-test-v2.9.2/tkdnd-2.9.2-windows-x64.zip",
+    "Linux"         : "https://github.com/petasis/tkdnd/releases/download/tkdnd-release-test-v2.9.2/tkdnd-2.9.2-linux-x64.tgz",
+    "Darwin"        : "https://github.com/petasis/tkdnd/releases/download/tkdnd-release-test-v2.9.2/tkdnd-2.9.2-osx-x64.tgz"
+    "RaspberryPiOS" : "https://github.com/8or5q/otp-voip/raw/master/pi_11/tkdnd-2.9.2-linux-armhf.tgz"
   }
 
   hashes = {
-    "Windows" : "d78007d93d8886629554422de2e89f64842ac9994d226eab7732cc4b59d1feea",
-    "Linux"   : "f0e956e4b0d62d4c7e88dacde3a9857e7a303dc36406bdd4d33d6459029a2843",
-    "Darwin"  : "0c604fb5776371e59f4c641de54ea65f24917b8e539a577484a94d2f66f6e31d"
+    "Windows"       : "d78007d93d8886629554422de2e89f64842ac9994d226eab7732cc4b59d1feea",
+    "Linux"         : "f0e956e4b0d62d4c7e88dacde3a9857e7a303dc36406bdd4d33d6459029a2843",
+    "Darwin"        : "0c604fb5776371e59f4c641de54ea65f24917b8e539a577484a94d2f66f6e31d",
+    "RaspberryPiOS" : "19f16116fcfc14459bbee80ab00766da6a15445d88fb011f76a13589ff54e945",
   }
 
   print("Starting installation of tkDND")
 
   os = platform.system()
+  machine = platform.machine()
 
-  if os not in ["Windows", "Linux", "Darwin"]:
+  if machine.startswith("arm"):
+    os = 'RaspberryPiOS'
+  elif os not in ["Windows", "Linux", "Darwin"]:
     print(f"{os} not supported!")
     exit(0)
 
@@ -58,7 +63,7 @@ def dnd_install():
 
   print("Download tkDnD libraries from github")
 
-  data =urllib.request.urlopen(url).read()
+  data = urllib.request.urlopen(url).read()
 
   data_hash = hashlib.sha256(data).hexdigest()
   
