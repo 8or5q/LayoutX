@@ -78,7 +78,7 @@ def dnd_install():
     import zipfile
     archive = zipfile.ZipFile(io.BytesIO(data))
     archive.extractall(path=tcl_dir)
-  elif os == "Linux" or os == "Darwin":
+  elif os == "Linux" or os == "Darwin" or os == "RaspberryPiOS":
     import tarfile
     archive = tarfile.open(fileobj=io.BytesIO(data))
     archive.extractall(path=tcl_dir)
